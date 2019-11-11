@@ -1,35 +1,40 @@
 //#include "Header.h"
 #include <stdio.h>
 #include <windows.h>
-#include "rlutil.h""
+
+
+
 HANDLE hStdin;
 DWORD fdwSaveOldMode;
 
 VOID ErrorExit(LPSTR);
 VOID KeyEventProc(KEY_EVENT_RECORD);
-VOID MouseEventProc(MOUSE_EVENT_RECORD);
+int MouseEventProc(MOUSE_EVENT_RECORD);
 VOID ResizeEventProc(WINDOW_BUFFER_SIZE_RECORD);
 _Bool ispressed = 0;
 void SetPosition(int X, int Y);
+int input_Buffer_Events_main();
 
+extern int posX;
+extern int posY;
 
+posX = 0;
+posY = 0;
 
-
-
-int input_Buffer_Events_main(VOID)
+int input_Buffer_Events_main()
 {
-	//TEXTCOLOR
-	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-	CONSOLE_SCREEN_BUFFER_INFO consoleInfo;
-	WORD saved_attributes;
+	////TEXTCOLOR
+	//HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+	//CONSOLE_SCREEN_BUFFER_INFO consoleInfo;
+	//WORD saved_attributes;
 
-	/* Save current attributes */
-	GetConsoleScreenBufferInfo(hConsole, &consoleInfo);
-	saved_attributes = consoleInfo.wAttributes;
+	///* Save current attributes */
+	//GetConsoleScreenBufferInfo(hConsole, &consoleInfo);
+	//saved_attributes = consoleInfo.wAttributes;
 
-	SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
-	printf("This is some nice COLORFUL text, isn't it?");
-	//***************
+	//SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
+
+	////***************
 
 
 
@@ -75,8 +80,8 @@ int input_Buffer_Events_main(VOID)
 
 	// Loop to read and handle the next 100 input events. 
 
-	while (1)
-	{
+	//while (1)
+	//{
 		// Wait for the events. 
 
 		if (!ReadConsoleInput(
@@ -98,7 +103,8 @@ int input_Buffer_Events_main(VOID)
 				break;
 
 			case MOUSE_EVENT: // mouse input 
-				MouseEventProc(irInBuf[i].Event.MouseEvent);
+				return (MouseEventProc(irInBuf[i].Event.MouseEvent));
+				
 				break;
 
 			case WINDOW_BUFFER_SIZE_EVENT: // scrn buf. resizing 
@@ -115,7 +121,7 @@ int input_Buffer_Events_main(VOID)
 				break;
 			}
 		}
-	}
+	//}
 
 	// Restore input mode on exit.
 
@@ -123,8 +129,8 @@ int input_Buffer_Events_main(VOID)
 
 	//RESTORE TEXTCOLOR
 	  /* Restore original attributes */
-	SetConsoleTextAttribute(hConsole, saved_attributes);
-	printf("Back to normal");
+	//SetConsoleTextAttribute(hConsole, saved_attributes);
+	//printf("Back to normal");
 
 
 
@@ -177,7 +183,7 @@ VOID KeyEventProc(KEY_EVENT_RECORD ker)
 
 }
 
-VOID MouseEventProc(MOUSE_EVENT_RECORD mer)
+int MouseEventProc(MOUSE_EVENT_RECORD mer)
 {
 #ifndef MOUSE_HWHEELED
 #define MOUSE_HWHEELED 0x0008
@@ -188,17 +194,24 @@ VOID MouseEventProc(MOUSE_EVENT_RECORD mer)
 
 	{
 	case 0:
-
+		//printf("BUTTON");
 		if (mer.dwButtonState == FROM_LEFT_1ST_BUTTON_PRESSED)
 		{
 
 			SetPosition(mer.dwMousePosition.X, mer.dwMousePosition.Y);
-			//
-			setColor(10);
+			
+			//setColor(10);
+			//ispressed = 1;
+			posX = mer.dwMousePosition.X;
+			posY = mer.dwMousePosition.Y;
+			
+			//print_colors();
+			
 
-			printf("*");
-			/*printf("left button press \n");
-			printf("left clicked at x=%d, y=%d\n", mer.dwMousePosition.X, mer.dwMousePosition.Y);*/
+			//printf("*");
+			return 1;
+			//printf("left button press \n");
+			//printf("left clicked at x=%d, y=%d\n", mer.dwMousePosition.X, mer.dwMousePosition.Y);
 
 
 			/*int myint = 0;
@@ -212,9 +225,11 @@ VOID MouseEventProc(MOUSE_EVENT_RECORD mer)
 		}
 		else
 		{
+			ispressed = 0;
 			//printf("button press\n");
 		}
 		break;
+	case -1: printf("right button released \n"); break;
 	case DOUBLE_CLICK:
 		//printf("double click\n");
 		break;
@@ -237,6 +252,7 @@ VOID MouseEventProc(MOUSE_EVENT_RECORD mer)
 		//printf("unknown\n");
 		break;
 	}
+	return 0;
 }
 
 VOID ResizeEventProc(WINDOW_BUFFER_SIZE_RECORD wbsr)

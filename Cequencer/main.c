@@ -8,7 +8,7 @@
 #include <dsound.h>
 
 
-
+// GERGE CLONI
 #define MAX 35
 #define X_COUNT 8
 #define Y_COUNT 16

@@ -261,7 +261,7 @@ VOID ResizeEventProc(WINDOW_BUFFER_SIZE_RECORD wbsr)
 	printf("Console screen buffer is %d columns by %d rows.\n", wbsr.dwSize.X, wbsr.dwSize.Y);
 }
 
-//asdsdf//sdf//asd//asd//asd////asd
+//123123asdsdf//sdf//asd//asd//asd////asd
 
 //*****************************
 

@@ -69,7 +69,10 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LibraryPath>C:\Users\ATN_70\Desktop\Cequencer-master\Cequencer\libsoundio-1.1.0\x86_64\;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\ATN_70\Desktop\Cequencer-master\Cequencer\libsoundio-1.1.0\x86_64\;C:\Users\ATN_70\Desktop\Cequencer-master\libsoundio-1.1.0\soundio;$(IncludePath)</IncludePath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -87,9 +90,12 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>C:\Users\ATN_70\Desktop\Cequencer-master\Cequencer\libsoundio-1.1.0\soundio;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
+      <AdditionalDependencies>winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Users\ATN_70\Desktop\Cequencer-master\Cequencer\libsoundio-1.1.0\x86_64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -123,9 +129,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="DS.c" />
     <ClCompile Include="Func.c" />
     <ClCompile Include="Input_Buffer_Events.c" />
+    <ClCompile Include="lsoundIO.c" />
     <ClCompile Include="main.c" />
+    <ClCompile Include="SWasapi.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Header.h" />

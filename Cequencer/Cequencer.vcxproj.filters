@@ -24,6 +24,15 @@
     <ClCompile Include="Func.c">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="lsoundIO.c">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="DS.c">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="SWasapi.c">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="rlutil.h">

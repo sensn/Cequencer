@@ -17,10 +17,10 @@ int input_Buffer_Events_main();
 
 extern int posX;
 extern int posY;
-
+extern int myMouseB;
 posX = 0;
 posY = 0;
-
+myMouseB = 0;
 int input_Buffer_Events_main()
 {
 	////TEXTCOLOR
@@ -204,13 +204,15 @@ int MouseEventProc(MOUSE_EVENT_RECORD mer)
 			//ispressed = 1;
 			posX = mer.dwMousePosition.X;
 			posY = mer.dwMousePosition.Y;
-			
+			myMouseB = 1;
 			//print_colors();
 			
 
 			//printf("*");
 			return 1;
 			//printf("left button press \n");
+			
+			
 			//printf("left clicked at x=%d, y=%d\n", mer.dwMousePosition.X, mer.dwMousePosition.Y);
 
 
@@ -220,11 +222,15 @@ int MouseEventProc(MOUSE_EVENT_RECORD mer)
 		}
 		else if (mer.dwButtonState == RIGHTMOST_BUTTON_PRESSED)
 		{
-
+			myMouseB = 2;
+			posX = mer.dwMousePosition.X;
+			posY = mer.dwMousePosition.Y;
+			return 1;
 			//printf("right button press \n");
 		}
 		else
 		{
+			myMouseB = 0;
 			ispressed = 0;
 			//printf("button press\n");
 		}
@@ -257,11 +263,11 @@ int MouseEventProc(MOUSE_EVENT_RECORD mer)
 
 VOID ResizeEventProc(WINDOW_BUFFER_SIZE_RECORD wbsr)
 {
-	printf("Resize event\n");
-	printf("Console screen buffer is %d columns by %d rows.\n", wbsr.dwSize.X, wbsr.dwSize.Y);
+//	printf("Resize event\n");
+//	printf("Console screen buffer is %d columns by %d rows.\n", wbsr.dwSize.X, wbsr.dwSize.Y);
 }
 
-//123123asdsdf//sdf//asd//asd//asd////asd
+
 
 //*****************************
 

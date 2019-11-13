@@ -49,7 +49,7 @@ typedef struct IDirectSound* LPDIRECTSOUND;
 //***
 
 
-int playSequence(struct dat lib[9][9]);
+int playSequence(struct dat lib[17][9]);
 //int input_Buffer_Events_main();
 int call_raster_main();
 extern int posX;
@@ -60,7 +60,8 @@ int xs = X_COUNT + 1;
 int ys = Y_COUNT + 1;
 
 int yoffset = 1;
-char** fpath = { "C:\\Users\\ATN_70\\Desktop\\C2_Ausbildung - master\\C2_Ausbildung\\snare.wav", "C:\\Users\\ATN_70\\Desktop\\C2_Ausbildung-master\\C2_Ausbildung\\kick.wav" };
+int s_main(char** fpath, int nr);
+char* fpath[] = { "C:\\Users\\ATN_70\\Desktop\\C2_Ausbildung-master\\C2_Ausbildung\\snare.wav", "C:\\Users\\ATN_70\\Desktop\\C2_Ausbildung-master\\C2_Ausbildung\\kick.wav" };
 
 struct dat lib[X_COUNT + 1][Y_COUNT + 1] = { '\0' };
 
@@ -70,14 +71,30 @@ DWORD WINAPI ThreadFunc(void* data) {
 	// When this function returns, the thread goes away.  See MSDN for more details.
 	return 0;
 }
-int s_main(char** fpath);
+DWORD WINAPI ThreadFunc1(void* data) {
+	s_main(fpath, 0);
+	
+	// Do stuff.  This will be the first function called on the new thread.
+	// When this function returns, the thread goes away.  See MSDN for more details.
+	return 0;
+}
+
 int main(int argc, char argv[]) {
 	
 	//HRESULT WINAPI DirectSoundCreate(LPGUID lpGuid, LPDIRECTSOUND * ppDS, LPUNKNOWN  pUnkOuter);
 
-	//HANDLE thread = CreateThread(NULL, 0, ThreadFunc, NULL, 0, NULL);
-	//call_raster_main();
-	s_main(fpath);
+	HANDLE thread = CreateThread(NULL, 0, ThreadFunc, NULL, 0, NULL);
+	call_raster_main();
+	
+	
+	//s_main(fpath, 1);
+	//s_main(fpath, 0);
+	//s_main(fpath, 0);
+	//s_main(fpath, 0);
+	//s_main(fpath, 1);
+	//s_main(fpath, 0);
+	//s_main(fpath, 1);
+	printf("this is the end");
 	//input_Buffer_Events_main();
 //	setColor(10);  //				reset to white;
 
@@ -243,9 +260,12 @@ int playSequence(struct dat lib[X_COUNT + 1][Y_COUNT + 1]) {
 				 SetPosition(lib[i][index].triggerX, X_COUNT+1+ yoffset + i);
 				 printf("T");
 				// printf("X: %d Y: %d",i, index);
-					
-					PlaySound("C:\\Users\\ATN_70\\Desktop\\C2_Ausbildung-master\\C2_Ausbildung\\snare.wav", NULL, SND_ASYNC);  //   PLAY THE SOUND using win api
-					PlaySound("C:\\Users\\ATN_70\\Desktop\\C2_Ausbildung-master\\C2_Ausbildung\\kick.wav", NULL, SND_ASYNC);
+				// s_main(fpath, 0);
+
+				 HANDLE thread1 = CreateThread(NULL, 0, ThreadFunc1, NULL, 0, NULL);
+
+					//PlaySound("C:\\Users\\ATN_70\\Desktop\\C2_Ausbildung-master\\C2_Ausbildung\\snare.wav", NULL, SND_ASYNC);  //   PLAY THE SOUND using win api
+					//PlaySound("C:\\Users\\ATN_70\\Desktop\\C2_Ausbildung-master\\C2_Ausbildung\\kick.wav", NULL, SND_ASYNC);
 				
 				}
 				else {

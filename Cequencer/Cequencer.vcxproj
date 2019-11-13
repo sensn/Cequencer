@@ -132,9 +132,7 @@
     <ClCompile Include="DS.c" />
     <ClCompile Include="Func.c" />
     <ClCompile Include="Input_Buffer_Events.c" />
-    <ClCompile Include="lsoundIO.c" />
     <ClCompile Include="main.c" />
-    <ClCompile Include="SWasapi.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Header.h" />

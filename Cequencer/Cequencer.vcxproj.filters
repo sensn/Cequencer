@@ -27,6 +27,9 @@
     <ClCompile Include="DS.c">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="keyMidi.c">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="rlutil.h">

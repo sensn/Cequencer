@@ -132,6 +132,7 @@
     <ClCompile Include="DS.c" />
     <ClCompile Include="Func.c" />
     <ClCompile Include="Input_Buffer_Events.c" />
+    <ClCompile Include="keyMidi.c" />
     <ClCompile Include="main.c" />
   </ItemGroup>
   <ItemGroup>

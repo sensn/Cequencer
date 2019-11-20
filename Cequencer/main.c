@@ -7,16 +7,23 @@
 #include <mmsystem.h>
 #include <dsound.h>
 
+#define _CRT_SECURE_NO_WARNINGS
+#pragma warning(disable:4996)
+
 
 
 #define MAX 35
 #define X_COUNT 8
 #define Y_COUNT 16
+
+
+
 struct dat
 {
 	int posX;
 	int posY;
 	int triggerX;
+	int notenumber;
 	char playerChr;
 
 	char name[MAX];
@@ -55,6 +62,17 @@ int call_raster_main();
 extern int posX;
 extern int posY;
 extern int myMouseB;
+extern int thebpm;
+int thebpm = 150;
+
+double ms;
+double dur;
+double swing = 0;
+double theswing = 0.33;
+
+
+
+
 //asd
 int xs = X_COUNT + 1;
 int ys = Y_COUNT + 1;
@@ -83,18 +101,17 @@ int main(int argc, char argv[]) {
 	
 	//HRESULT WINAPI DirectSoundCreate(LPGUID lpGuid, LPDIRECTSOUND * ppDS, LPUNKNOWN  pUnkOuter);
 
-	HANDLE thread = CreateThread(NULL, 0, ThreadFunc, NULL, 0, NULL);
-	call_raster_main();
+	HANDLE thread = CreateThread(NULL, 0, ThreadFunc, NULL, 0, NULL);   //Playsequence in own Thread
+	midi_main(0, 0);													//open Midi Port, set up Midi
+	//getch();
+	call_raster_main();													// Print Raster etc..								
+	
+
 	
 	
-	//s_main(fpath, 1);
-	//s_main(fpath, 0);
-	//s_main(fpath, 0);
 	//s_main(fpath, 0);
 	//s_main(fpath, 1);
-	//s_main(fpath, 0);
-	//s_main(fpath, 1);
-	printf("this is the end");
+	//printf("this is the end");
 	//input_Buffer_Events_main();
 //	setColor(10);  //				reset to white;
 
@@ -180,6 +197,7 @@ int call_raster_main() {
 			}
 			else if (myMouseB == 2) {
 				lib[posY][posX].playerChr = ' ';
+			//	midi1_close();
 			}
 
 			lib[posY][posX].triggerX = tx;
@@ -190,55 +208,59 @@ int call_raster_main() {
 	//	}
 		//printf("MOUSE");
 	} while (eingabe != 0);
+
 	return 1;
 }
 
+void setBpm(int updown) {
+	(updown > 0) ? thebpm++ : thebpm--;
 
+	ms = ((60000.0 / (double)thebpm) / (double)4);  //Milliseconds per quarternote
+	//ms = 125;  //Millisecond per quarternote
+	dur = (ms / 1000) * CLOCKS_PER_SEC;
+	//printf("MILLIS PER QUATER:%f\n", ms);
+	//printf("ms/Clocks :%f\n", dur);
+	SetPosition(0, 0);
+	printf("%d BPM", thebpm);
+}
 
 int playSequence(struct dat lib[X_COUNT + 1][Y_COUNT + 1]) {
 	HANDLE    hIOMutex = CreateMutex(NULL, TRUE, NULL);
 
 	WaitForSingleObject(hIOMutex, INFINITE);
 	
-
+	setBpm(1);
 	
 	
 	
 	_Bool isplaying = 1;
 
-	double time_spent = 0.0;
+	//double time_spent = 0.0;
 	
 	long begin = clock();
-
 	// do some stuff here
 	//Sleep(3);
-
-	long end = clock();
+	//long end = clock();
 	double theend = clock();
 
 	// calculate elapsed time by finding difference (end - begin) and
 	// divide by CLOCKS_PER_SEC to convert to seconds
-	time_spent += (double)(end - begin) / CLOCKS_PER_SEC;
-
+	//time_spent += (double)(end - begin) / CLOCKS_PER_SEC;
 	//	printf("Time elpased is %f seconds", time_spent);
 
 		//
 	int index = 1;
 
-	double ms;
-	double dur;
-	double swing = 0;
-	double theswing = 0.0;
-	int thebpm = 120;
-
-	ms = ((60000.0 / (double)thebpm) / (double)4);  //Millisecond per quarternote
-	//ms = 125;  //Millisecond per quarternote
-	dur = (ms / 1000) * CLOCKS_PER_SEC;
-	printf("MILLIS PER QUATER:%f\n\n", ms);
-	printf("ms/Clocks :%f\n\n", dur);
+//******MS
 
 	//
-
+	for (size_t x = 1; x < xs; x++) {
+		for (size_t y = 1; y < ys; y++) {
+			lib[x][y].notenumber = 35 + x;    //assign Notenumbers
+		}
+	}
+		//if (myHouse.room[i].trigger[index]) {
+		
 	House myHouse = { 640,400,.room[0] = {{1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0},64,127,1},
 							   .room[1] = {{1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0},64,127,1},
 							   .room[2] = {{1,1,0,1,1,1,0,1,1,1,0,1,1,1,0,1},64,127,1} };
@@ -251,18 +273,23 @@ int playSequence(struct dat lib[X_COUNT + 1][Y_COUNT + 1]) {
 			theend = (double)clock() + dur + (dur * (swing));
 			swing = (index % 2) ? 0 : theswing;
 			//printf("%f", swing);
-			//printf("*");    //Do things...
-
-			for (int i = 1; i < 9; i++) {
+			//printf("*");									 //Do things...
+			SetPosition(index * 2, 1);						//cursorPosition as Step Indicator
+			midi1_all_notesoff();
+			//midi1_reset();
+			for (int i = 1; i < xs; i++) {
+				
 				//if (myHouse.room[i].trigger[index]) {
 				if (lib[i][index].playerChr == '*') {
 					
-				 SetPosition(lib[i][index].triggerX, X_COUNT+1+ yoffset + i);
-				 printf("T");
+				// SetPosition(lib[i][index].triggerX, X_COUNT+1+ yoffset + i);
+				// SetPosition(lib[i][index].triggerX, 1);
+				// printf("T");
+
 				// printf("X: %d Y: %d",i, index);
 				// s_main(fpath, 0);
-
-				 HANDLE thread1 = CreateThread(NULL, 0, ThreadFunc1, NULL, 0, NULL);
+				 midi1_noteout(1, lib[i][index].notenumber,100);
+				// HANDLE thread1 = CreateThread(NULL, 0, ThreadFunc1, NULL, 0, NULL);
 
 					//PlaySound("C:\\Users\\ATN_70\\Desktop\\C2_Ausbildung-master\\C2_Ausbildung\\snare.wav", NULL, SND_ASYNC);  //   PLAY THE SOUND using win api
 					//PlaySound("C:\\Users\\ATN_70\\Desktop\\C2_Ausbildung-master\\C2_Ausbildung\\kick.wav", NULL, SND_ASYNC);
@@ -273,7 +300,7 @@ int playSequence(struct dat lib[X_COUNT + 1][Y_COUNT + 1]) {
 				}
 			}//for
 
-
+			
 
 			index++;
 		} //if beginn > end

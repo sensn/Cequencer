@@ -1,8 +1,11 @@
 //#include "Header.h"
 #include <stdio.h>
 #include <windows.h>
+//#include "keyMidi.c"
 
 
+void midi1_sendPrgChange(int thechannel, int prgnumber);
+void sendMidiBank(int thechannel, int thebank);
 
 HANDLE hStdin;
 DWORD fdwSaveOldMode;
@@ -18,11 +21,13 @@ int input_Buffer_Events_main();
 extern int posX;
 extern int posY;
 extern int myMouseB;
+extern int thebpm;
 posX = 0;
 posY = 0;
 myMouseB = 0;
 int input_Buffer_Events_main()
 {
+	int thebpm = 120;
 	////TEXTCOLOR
 	//HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 	//CONSOLE_SCREEN_BUFFER_INFO consoleInfo;
@@ -155,8 +160,13 @@ VOID KeyEventProc(KEY_EVENT_RECORD ker)
 	static count = 0;
 	if (ker.bKeyDown) {
 		//printf("key pressed  %c \n", ker.uChar.AsciiChar);
-		if (ker.uChar.AsciiChar == 'a')
-			ispressed = ++count % 2;
+		if (ker.uChar.AsciiChar == 'a') {
+			//ispressed = ++count % 2;
+			
+			sendMidiBank(0, 7);                 //channel - Bank number              
+			midi1_sendPrgChange(0, 1);			//channel - Prg Number		
+		}
+
 		else if (ker.uChar.AsciiChar == 'c')
 			system("cls");
 		DWORD fdwMode = ENABLE_WINDOW_INPUT | ENABLE_MOUSE_INPUT;
@@ -189,7 +199,7 @@ int MouseEventProc(MOUSE_EVENT_RECORD mer)
 #define MOUSE_HWHEELED 0x0008
 #endif
 	//printf("Mouse event: ");
-
+	int wheelX = 0;
 	switch (mer.dwEventFlags)
 
 	{
@@ -240,6 +250,7 @@ int MouseEventProc(MOUSE_EVENT_RECORD mer)
 		//printf("double click\n");
 		break;
 	case MOUSE_HWHEELED:
+		
 		//printf("horizontal mouse wheel\n");
 		break;
 	case MOUSE_MOVED:
@@ -252,7 +263,18 @@ int MouseEventProc(MOUSE_EVENT_RECORD mer)
 
 		break;
 	case MOUSE_WHEELED:
-		//printf("vertical mouse wheel\n");
+		wheelX = mer.dwButtonState;
+		if (wheelX > 0) {
+			//printf("PO");
+			setBpm(1);
+		}
+		else {
+			//printf("NE");
+			setBpm(0);
+
+		}
+		
+		
 		break;
 	default:
 		//printf("unknown\n");

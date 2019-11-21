@@ -57,8 +57,11 @@ typedef struct IDirectSound* LPDIRECTSOUND;
 
 
 int playSequence(struct dat lib[17][9]);
+
 //int input_Buffer_Events_main();
 int call_raster_main();
+void draw_buttons(int xb, int yb, int yoffset1);
+
 extern int posX;
 extern int posY;
 extern int myMouseB;
@@ -171,14 +174,17 @@ int call_raster_main() {
 				if (y == ys - 1) {
 					printf("|");
 				}
+				
 			}
 		puts("");
-		
 		}
+
+		draw_buttons(2, 3, 4);
 		/*printf("MOUSElib X: %d Y:%d\n", lib[posX][posY].posX, lib[posX][posY].posY);
 		printf("MOUSEPOS X: %d Y:%d", posX, posY);*/
 		do
 		{
+			
 		} while (!input_Buffer_Events_main());
 		//	setColor(10);
 			//printf("MOUSE X: %d Y:%d",posX,posY);
@@ -326,5 +332,54 @@ int playSequence(struct dat lib[X_COUNT + 1][Y_COUNT + 1]) {
 		}
 
 	}
+
+}
+
+void draw_buttons(int xb, int yb,int yoffset1) {
+	/*for (int i = 0; i < yoffset; i++) {
+		puts("");
+
+	}*/
+	for (size_t x = 0; x < yb * 2 - 2; x += 2) {
+		SetPosition(x, yoffset+X_COUNT+1+yoffset1);
+		printf(" %c", '_');
+		//printf(" ");
+		/*SetPosition(x+1, yoffset);
+		printf("%c ",'_');*/
+	}
+	puts("");
+	for (size_t x = 1; x < xb; x++) {
+		for (size_t y = 1; y < yb; y++) {
+			//(y>1)? SetPosition(y+y, x + yoffset): 
+			SetPosition(y + y - 2, x + yoffset + X_COUNT + 1 + yoffset1);
+
+			printf("|");
+
+			//if
+			//else
+			printf("%c", '_');
+
+
+			if (y == yb - 1) {
+				printf("|");
+			}
+			//printf("%c", ((lib[x][y].posX > 0 && lib[x][y].posY > 0) && (x == lib[x][y].posX && y == lib[x][y].posY)) ? lib[x][y].playerChr : '_');
+			
+			/*if ((lib[x][y].posX > 0 && lib[x][y].posY > 0) && (x == lib[x][y].posX && y == lib[x][y].posY)) {
+				setColor(10);
+				printf("%c", lib[x][y].playerChr);
+				setColor(7);
+			}
+			else {
+				printf("%c", '_');
+			}*/
+
+			//printf("%s", ((lib[x][y].posX >0 && lib[x][y].posY >0) && (x == lib[x][y].posX && y == lib[x][y].posY)) ? "T" :"_" );
+			
+		}
+		puts("");
+
+	}
+
 
 }

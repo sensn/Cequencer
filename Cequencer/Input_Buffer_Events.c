@@ -207,28 +207,21 @@ int MouseEventProc(MOUSE_EVENT_RECORD mer)
 		//printf("BUTTON");
 		if (mer.dwButtonState == FROM_LEFT_1ST_BUTTON_PRESSED)
 		{
-
 			SetPosition(mer.dwMousePosition.X, mer.dwMousePosition.Y);
-			
 			//setColor(10);
 			//ispressed = 1;
 			posX = mer.dwMousePosition.X;
 			posY = mer.dwMousePosition.Y;
 			myMouseB = 1;
 			//print_colors();
-			
-
 			//printf("*");
 			return 1;
 			//printf("left button press \n");
-			
-			
+				
 			//printf("left clicked at x=%d, y=%d\n", mer.dwMousePosition.X, mer.dwMousePosition.Y);
 
 
-			/*int myint = 0;
-			puts("inputnumber");
-			scanf_s("%d", &myint);*/
+		
 		}
 		else if (mer.dwButtonState == RIGHTMOST_BUTTON_PRESSED)
 		{
@@ -273,8 +266,6 @@ int MouseEventProc(MOUSE_EVENT_RECORD mer)
 			setBpm(0);
 
 		}
-		
-		
 		break;
 	default:
 		//printf("unknown\n");
@@ -288,15 +279,8 @@ VOID ResizeEventProc(WINDOW_BUFFER_SIZE_RECORD wbsr)
 //	printf("Resize event\n");
 //	printf("Console screen buffer is %d columns by %d rows.\n", wbsr.dwSize.X, wbsr.dwSize.Y);
 }
-
-
-
 //*****************************
-
 //*** Prototypes ***
-
-
-
 //*****
 void SetPosition(int X, int Y)
 {

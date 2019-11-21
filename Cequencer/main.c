@@ -152,8 +152,11 @@ int call_raster_main() {
 		puts("");
 		for (size_t x = 1; x < xs; x++) {
 			for (size_t y = 1; y < ys; y++) {
+				//(y>1)? SetPosition(y+y, x + yoffset): 
+					SetPosition(y + y-2, x + yoffset);
+			
 				printf("|");
-
+				
 				//printf("%c", ((lib[x][y].posX > 0 && lib[x][y].posY > 0) && (x == lib[x][y].posX && y == lib[x][y].posY)) ? lib[x][y].playerChr : '_');
 				if ((lib[x][y].posX > 0 && lib[x][y].posY > 0) && (x == lib[x][y].posX && y == lib[x][y].posY)) {
 					setColor(10);
@@ -183,29 +186,35 @@ int call_raster_main() {
 		//	if (posX < xs && posY < ys) {
 		if (myMouseB != 0) {
 			tx = posX;
-			if (posX == 1) {
+			
+				if (posX == 1) {
 
-			}
-			else if (posX > 1) {
-				posX = posX - (posX / 2);
-			}
-			posY = posY - yoffset;
-			lib[posY][posX].posY = posX;
-			lib[posY][posX].posX = posY;
-			if (myMouseB == 1) {
-				lib[posY][posX].playerChr = '*';
-			}
-			else if (myMouseB == 2) {
-				lib[posY][posX].playerChr = ' ';
-			//	midi1_close();
-			}
+				}
+				else if (posX > 1) {
+					posX = posX - (posX / 2);                                // Cast Mousecklick to cells
+				}
+				posY = posY - yoffset;
+				if (posX < Y_COUNT + 1 && posY < X_COUNT + 1 + yoffset && posY> yoffset-1) {          //Click inside Rectangle?
+				lib[posY][posX].posY = posX;
+				lib[posY][posX].posX = posY;
+				if (myMouseB == 1) {
+					lib[posY][posX].playerChr = '*';
+				}
+				else if (myMouseB == 2) {
+					lib[posY][posX].playerChr = ' ';
+					//	midi1_close();
+				}
 
-			lib[posY][posX].triggerX = tx;
+				lib[posY][posX].triggerX = tx;
+			}
+			//}
+		//	ReleaseMutex(hIOMutex);
+		
+	/*	else {                           //Mouseclick outside struct
+			printf("outyout");
+		}*/
+
 		}
-				//}
-				ReleaseMutex(hIOMutex);
-
-	//	}
 		//printf("MOUSE");
 	} while (eingabe != 0);
 
@@ -274,7 +283,7 @@ int playSequence(struct dat lib[X_COUNT + 1][Y_COUNT + 1]) {
 			swing = (index % 2) ? 0 : theswing;
 			//printf("%f", swing);
 			//printf("*");									 //Do things...
-			SetPosition(index * 2, 1);						//cursorPosition as Step Indicator
+			SetPosition(index * 2 - 1, 1);		//cursorPosition as Step Indicator   Curser
 			midi1_all_notesoff();
 			//midi1_reset();
 			for (int i = 1; i < xs; i++) {
@@ -289,6 +298,7 @@ int playSequence(struct dat lib[X_COUNT + 1][Y_COUNT + 1]) {
 				// printf("X: %d Y: %d",i, index);
 				// s_main(fpath, 0);
 				 midi1_noteout(1, lib[i][index].notenumber,100);
+
 				// HANDLE thread1 = CreateThread(NULL, 0, ThreadFunc1, NULL, 0, NULL);
 
 					//PlaySound("C:\\Users\\ATN_70\\Desktop\\C2_Ausbildung-master\\C2_Ausbildung\\snare.wav", NULL, SND_ASYNC);  //   PLAY THE SOUND using win api
@@ -298,6 +308,7 @@ int playSequence(struct dat lib[X_COUNT + 1][Y_COUNT + 1]) {
 				else {
 					//	printf("-");
 				}
+				
 			}//for
 
 			
